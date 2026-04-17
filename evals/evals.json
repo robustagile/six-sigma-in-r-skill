@@ -1,0 +1,35 @@
+{
+  "skill_name": "six-sigma-r",
+  "evals": [
+    {
+      "id": 0,
+      "name": "capability-study",
+      "prompt": "I've got 50 measurements of a shaft diameter from this morning's run: 10.02, 9.98, 10.01, 10.03, 9.99, 10.00, 10.04, 9.97, 10.02, 10.01, 9.96, 10.00, 10.03, 10.02, 9.98, 10.01, 9.99, 10.02, 10.04, 10.00, 9.97, 10.01, 10.02, 9.98, 10.03, 10.00, 9.99, 10.02, 10.01, 9.96, 10.00, 10.03, 10.02, 9.98, 10.01, 10.04, 10.00, 9.99, 10.01, 10.02, 9.97, 10.00, 10.03, 10.01, 9.98, 10.02, 10.00, 9.99, 10.01, 10.03. Spec is 10.00 mm +/- 0.05. Is this process capable? Write me an R script that computes Cpk and Ppk and prints whether the process is acceptable. File output is fine for plots.",
+      "expected_output": "A runnable R script that (a) stores the 50 measurements, (b) computes both Cpk (using short-term sigma from an R chart or labeled sd proxy) and Ppk (using overall sd), (c) prints verdict vs 1.33 threshold, (d) optionally overlays a histogram with normal curve and spec limits."
+    },
+    {
+      "id": 1,
+      "name": "p-chart-function",
+      "prompt": "Write me a reusable R function that takes a data frame with columns 'Samples' (sample size per subgroup) and 'Defects' (count of defectives) and draws a P chart with 3-sigma control limits. Sample size varies by row, so the limits should be per-point. Flag any out-of-control points in red. No dependency on ggplot2 please.",
+      "expected_output": "An R function (not a script), using base R plotting, that correctly computes p-bar = sum(Defects)/sum(Samples), per-subgroup UCL/LCL = p_bar +/- 3*sqrt(p_bar*(1-p_bar)/n_i), clamps LCL at 0, and highlights OOC points."
+    },
+    {
+      "id": 2,
+      "name": "sample-size-paired-t",
+      "prompt": "Planning a customer-satisfaction survey. We want to detect a 2-point drop in CSAT (scale is 0-10, pilot standard deviation about 4.5) between the same customers measured before and after a new onboarding flow. Two-sided test, alpha = 0.05, power = 80%. How many respondents do I need? Give me the R code and the interpretation.",
+      "expected_output": "Uses power.t.test with type='paired', delta=2, sd=4.5, sig.level=0.05, power=0.8, alternative='two.sided'. Reports ceiling(n) and states the interpretation. Correct answer is n >= 42 pairs."
+    },
+    {
+      "id": 3,
+      "name": "pareto-denials",
+      "prompt": "Here's a CSV of claim-denial reasons: Type,Count -- Duplicate claim,18012 -- Timely filling,13245 -- No Beneficiary found,10215 -- Claim lack information,4548 -- Service not covered,2154 -- Medical Necessity,1423 -- Date of service issue,526. Give me an R script that draws a Pareto chart and tells me which categories account for the top 80 percent.",
+      "expected_output": "A runnable R script using base R that sorts the data descending by Count, computes cumulative percent, draws a bar chart + cumulative line overlay + 80% reference line, and prints (or otherwise identifies) the categories contributing to the top 80%."
+    },
+    {
+      "id": 4,
+      "name": "imr-chart",
+      "prompt": "I have 22 daily sales readings: 19, 17, 17, 18, 20, 23, 22, 17, 18, 19, 18, 20, 21, 19, 24, 16, 15, 20, 21, 20, 19, 20. Plot an I-MR chart, flag any out-of-control points, and tell me whether the process is stable. R script, inline plots are fine.",
+      "expected_output": "R script that computes moving range (abs diff), uses sigma = MR-bar / 1.128 (not sd(x)) for the individuals chart limits, uses D4=3.267 for the MR UCL and 0 for MR LCL (n=2), plots both I and MR charts with UCL/LCL/center lines, highlights OOC points, and states whether the process is stable."
+    }
+  ]
+}
